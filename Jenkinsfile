@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout code from repository
-                git 'https://github.com/yourusername/your-repository.git'
+                git 'https://github.com/qafranklin/Jenkins-Playwright.git'
             }
         }
 
