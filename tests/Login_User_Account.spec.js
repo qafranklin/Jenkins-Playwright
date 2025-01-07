@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const LoginPage = require('../../pageobjects/LoginPage'); 
+const LoginPage = require('../pageobjects/LoginPage'); 
 
 test('@authregression Log In Existing Account', async ({ page }) => {
   try {
