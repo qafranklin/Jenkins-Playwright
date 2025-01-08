@@ -48,7 +48,7 @@ class LoginPage {
 
   // Step 6: Fill the password field
   async fillPassword() {
-    await this.passwordField.fill('admin123');
+    await this.passwordField.fill('admin1234');
     console.log('Fill Password Field');
   }
 
