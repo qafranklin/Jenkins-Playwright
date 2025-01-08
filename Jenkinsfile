@@ -19,7 +19,7 @@ pipeline {
         stage('Run Playwright Tests') {
             steps {
                 script {
-                    bat 'npx playwright test'  // Run Playwright tests using 'bat' for Windows
+                    bat 'npm run Regression'  // Run Playwright tests using 'bat' for Windows
                 }
             }
         }
