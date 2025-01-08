@@ -35,7 +35,7 @@ class LoginPage {
 
   // Step 4: Fill the username field
   async fillUsername() {
-    await this.usernameField.fill('doctorhan');
+    await this.usernameField.fill('admin');
     console.log('Fill Username Field');
   }
 
@@ -48,7 +48,7 @@ class LoginPage {
 
   // Step 6: Fill the password field
   async fillPassword() {
-    await this.passwordField.fill('abcdE@123');
+    await this.passwordField.fill('admin123');
     console.log('Fill Password Field');
   }
 
