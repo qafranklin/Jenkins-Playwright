@@ -2,23 +2,16 @@ pipeline {
     agent any
 
     environment {
-        NODE_HOME = '/usr/local/bin/node'  // Path to Node.js if required
-        PATH = "${NODE_HOME}:${env.PATH}"
+        NODE_HOME = 'C:\\Program Files\\nodejs'  // Adjust path to your Node.js installation (note the double backslashes)
+        PATH = "${NODE_HOME};${env.PATH}"  // Ensure Node.js is added to the PATH for Jenkins
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Check out the repository
-                checkout scm
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install Node.js and dependencies
-                    sh 'npm install'
+                    bat 'npm install -g playwright'  // Install Playwright globally using 'bat' for Windows
+                    bat 'npm install'  // Install project dependencies
                 }
             }
         }
@@ -26,31 +19,23 @@ pipeline {
         stage('Run Playwright Tests') {
             steps {
                 script {
-                    // Run Playwright tests using npx
-                    sh 'npx playwright test'
+                    bat 'npx playwright test'  // Run Playwright tests using 'bat' for Windows
                 }
-            }
-        }
-
-        stage('Archive Test Results') {
-            steps {
-                // Optionally, you can archive the test results
-                archiveArtifacts artifacts: '**/test-results/**/*.xml', allowEmptyArchive: true
             }
         }
     }
 
     post {
         always {
-            // Clean up actions after the test, if any
+            echo 'Cleaning up...'
         }
 
         success {
-            echo 'Playwright tests passed!'
+            echo 'Playwright tests ran successfully.'
         }
 
         failure {
-            echo 'Playwright tests failed!'
+            echo 'Playwright tests failed.'
         }
     }
 }
