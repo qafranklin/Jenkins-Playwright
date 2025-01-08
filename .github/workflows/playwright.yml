@@ -1,42 +1,27 @@
-name: Trigger Jenkins Job
-
+name: Playwright Tests
 on:
   push:
-    branches:
-      - main  # Or whichever branch you want to trigger on push
-
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 jobs:
-  playwright_and_jenkins_trigger:
+  test:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
-        node-version: '16'  # Set the desired Node.js version
-
+        node-version: lts/*
     - name: Install dependencies
-      run: |
-        npm install  # Install dependencies listed in your package.json
-
-    - name: Install Playwright
-      run: |
-        npm install playwright  # Install Playwright dependency
-
-    - name: Run Playwright Tests
-      run: |
-        npx playwright install-deps  # Install required dependencies for Playwright
-        npx playwright test  # Run Playwright tests
-
-    - name: Trigger Jenkins Build
-      env:
-        JENKINS_URL: http://localhost:8080/  # Your Jenkins URL (e.g., http://your-jenkins-url)
-        JENKINS_TOKEN: 11bd0e27faf0b99926ce2af1d5f70796ef  # The Jenkins token for the job
-        JENKINS_JOB_NAME: "PlaywrightCI"                # Jenkins job name
-        CAUSE_TEXT: "Triggered from GitHub Actions after Playwright tests"  # Custom cause text
-      run: |
-        # Trigger Jenkins build (with cause parameter)
-        curl -X POST "${{ env.JENKINS_URL }}/job/${{ env.JENKINS_JOB_NAME }}/build?token=${{ env.JENKINS_TOKEN }}&cause=${{ env.CAUSE_TEXT }}"
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: npm run Regression
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30

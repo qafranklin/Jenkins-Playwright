@@ -1,36 +1,56 @@
 pipeline {
     agent any
+
     environment {
-        NODE_HOME = tool name: 'Node 16', type: 'NodeJS'  // Ensure Node 16 is configured in Jenkins
-        PATH = "${NODE_HOME}/bin:${env.PATH}"  // Add Node.js to the PATH environment variable
+        NODE_HOME = '/usr/local/bin/node'  // Path to Node.js if required
+        PATH = "${NODE_HOME}:${env.PATH}"
     }
+
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/qafranklin/Jenkins-Playwright.git'
+                // Check out the repository
+                checkout scm
             }
         }
+
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Use bat to run npm and playwright installation on Windows
-                    bat 'npm install'  // Equivalent to sh 'npm install' in Linux/Unix
-                    bat 'npx playwright install'  // Equivalent to sh 'npx playwright install'
+                    // Install Node.js and dependencies
+                    sh 'npm install'
                 }
             }
         }
+
         stage('Run Playwright Tests') {
             steps {
                 script {
-                    // Run the Playwright tests using Node.js on Windows
-                    bat 'node test.js'  // Equivalent to sh 'node test.js'
+                    // Run Playwright tests using npx
+                    sh 'npx playwright test'
                 }
             }
         }
+
+        stage('Archive Test Results') {
+            steps {
+                // Optionally, you can archive the test results
+                archiveArtifacts artifacts: '**/test-results/**/*.xml', allowEmptyArchive: true
+            }
+        }
     }
+
     post {
         always {
-            echo 'Cleaning up...'
+            // Clean up actions after the test, if any
+        }
+
+        success {
+            echo 'Playwright tests passed!'
+        }
+
+        failure {
+            echo 'Playwright tests failed!'
         }
     }
 }
