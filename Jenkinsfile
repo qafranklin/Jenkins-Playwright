@@ -1,7 +1,8 @@
 pipeline {
     agent any
     environment {
-        NODE_HOME = tool name: 'Node 16', type: 'NodeJS'
+        NODE_HOME = tool name: 'Node 16', type: 'NodeJS'  // Ensure Node 16 is configured in Jenkins
+        PATH = "${NODE_HOME}/bin:${env.PATH}"  // Add Node.js to the PATH environment variable
     }
     stages {
         stage('Checkout') {
@@ -12,15 +13,17 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    sh 'npm install'
-                    sh 'npx playwright install'
+                    // Use bat to run npm and playwright installation on Windows
+                    bat 'npm install'  // Equivalent to sh 'npm install' in Linux/Unix
+                    bat 'npx playwright install'  // Equivalent to sh 'npx playwright install'
                 }
             }
         }
         stage('Run Playwright Tests') {
             steps {
                 script {
-                    sh 'node test.js'  // Adjust this to your test script filename
+                    // Run the Playwright tests using Node.js on Windows
+                    bat 'node test.js'  // Equivalent to sh 'node test.js'
                 }
             }
         }
