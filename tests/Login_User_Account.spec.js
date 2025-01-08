@@ -10,10 +10,10 @@ test('@authregression Log In Existing Account', async ({ page }) => {
   await loginPage.validateLoginPage();
 
   // // Step 2: Validate and fill login credentials
-  // await loginPage.validateUsernameField();
-  // await loginPage.fillUsername();
-  // await loginPage.validatePasswordField();
-  // await loginPage.fillPassword();
+  await loginPage.validateUsernameField();
+  await loginPage.fillUsername();
+  await loginPage.validatePasswordField();
+  await loginPage.fillPassword();
 
   // // Step 3: Validate login button and perform login
   // await loginPage.validateLoginButton();
